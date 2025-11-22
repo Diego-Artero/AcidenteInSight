@@ -11,15 +11,15 @@ import os
 import yaml
 
 BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+# Caminho para o arquivo de configuração (relativo à raiz do projeto)
+CONFIG_PATH = os.path.join(BASE_DIR, "config", "config.yaml")
 
-# Carregar configurações do YAML
-CONFIG_PATH = "AcidenteInSight/config/config.yaml"
-
-def load_config():
+def load_config(CONFIG_PATH):
     with open(CONFIG_PATH, "r", encoding="utf-8") as file:
         return yaml.safe_load(file)
 
-config = load_config()
+
+config = load_config(CONFIG_PATH)
 BASE_URL = config["scraping"]["base_url"]
 DOWNLOAD_DIR = os.path.join(BASE_DIR, config["scraping"]["save_path"])
 

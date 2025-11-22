@@ -13,7 +13,7 @@ def load_config(CONFIG_PATH):
         return yaml.safe_load(file)
 
 
-config = load_config()
+config = load_config(CONFIG_PATH)
 
 # Obter o caminho relativo para a pasta raw definido no YAML e construir o caminho absoluto
 raw_relative = config["scraping"]["save_path"] 
