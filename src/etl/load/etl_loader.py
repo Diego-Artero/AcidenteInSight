@@ -2,11 +2,8 @@ import os
 import sqlite3
 import pandas as pd
 import yaml
-
-# Config path setup
-def load_config(CONFIG_PATH):
-    with open(CONFIG_PATH, "r", encoding="utf-8") as file:
-        return yaml.safe_load(file)
+from src.utils import load_config
+from pathlib import Path
 
 # Loader function
 def save_dataframes_to_sqlite(DB_PATH, df_dict, if_exists="replace"):
@@ -20,7 +17,7 @@ def process_and_load_data(pessoas_path, veiculos_path, sinistros_path, CONFIG_PA
     try:
         config = load_config(CONFIG_PATH)
 
-        BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+        BASE_DIR = Path(__file__).resolve().parents[3]
         DB_DIR = os.path.abspath(os.path.join(BASE_DIR, config['database']['save_path_processed_databases']))
         DB_PATH = os.path.join(DB_DIR, "acidentes_infosiga.db")
 

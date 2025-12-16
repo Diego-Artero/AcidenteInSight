@@ -1,17 +1,14 @@
 import os
 import pandas as pd
 import yaml
+from utils import load_config
+from pathlib import Path
 
 # Project root
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
+BASE_DIR = Path(__file__).resolve().parents[3]
 
 # Config path setup
 CONFIG_PATH = os.path.join(BASE_DIR, "config", "config.yaml")
-
-def load_config(CONFIG_PATH = CONFIG_PATH):
-    with open(CONFIG_PATH, "r", encoding="utf-8") as file:
-        return yaml.safe_load(file)
-
 config = load_config(CONFIG_PATH)
 
 # Directories

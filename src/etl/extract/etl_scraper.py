@@ -6,18 +6,14 @@ from selenium.webdriver.firefox.options import Options
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from webdriver_manager.firefox import GeckoDriverManager
+from src.utils import load_config
+from pathlib import Path
 import time
 import os
 import yaml
 
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-# Caminho para o arquivo de configuração (relativo à raiz do projeto)
-CONFIG_PATH = os.path.join(BASE_DIR, "config", "config.yaml")
-
-def load_config(CONFIG_PATH):
-    with open(CONFIG_PATH, "r", encoding="utf-8") as file:
-        return yaml.safe_load(file)
-
+BASE_DIR = Path(__file__).resolve().parents[3]
+CONFIG_PATH = BASE_DIR / "config" / "config.yaml"
 
 config = load_config(CONFIG_PATH)
 BASE_URL = config["scraping"]["base_url"]
@@ -52,13 +48,8 @@ def download_latest_report():
         wait = WebDriverWait(driver, 4)  # Espera dinâmica de até 4 segundos
 
         # Encontrar e clicar no botão "Dados Abertos"
-        dados_abertos_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "//h2[contains(text(), '8. Dados Abertos')]")))
+        dados_abertos_btn = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/div[3]/div[2]/div/div[2]/section/p[1]/a")))
         dados_abertos_btn.click()
-        print("Seção 'Dados Abertos' expandida.")
-
-        # Selecionar o link correto para download (exemplo: "Dados")
-        download_link = wait.until(EC.element_to_be_clickable((By.XPATH, "//h3/a[contains(text(), 'Dados')]")))
-        download_link.click()
         print("Download dos Dados iniciado...")
 
         # Esperar alguns segundos para garantir que o download termine

@@ -2,24 +2,18 @@ import os
 import zipfile
 import pandas as pd
 import yaml
+from pathlib import Path
+from src.utils import load_config
 
-# Define a raiz do projeto subindo 3 níveis a partir deste script
-BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-# Caminho para o arquivo de configuração (relativo à raiz do projeto)
-CONFIG_PATH = os.path.join(BASE_DIR, "config", "config.yaml")
-
-def load_config(CONFIG_PATH):
-    with open(CONFIG_PATH, "r", encoding="utf-8") as file:
-        return yaml.safe_load(file)
-
+BASE_DIR = Path(__file__).resolve().parents[3]
+CONFIG_PATH = BASE_DIR / "config" / "config.yaml"
 
 config = load_config(CONFIG_PATH)
 
-# Obter o caminho relativo para a pasta raw definido no YAML e construir o caminho absoluto
 raw_relative = config["scraping"]["save_path"] 
 DOWNLOAD_DIR = os.path.join(BASE_DIR, raw_relative)
 
-# Obter o caminho relativo para a pasta processed definido no YAML e construir o caminho absoluto para ela e suas subpastas
+''
 processed_relative = config["scraping"]["save_path_processed"] 
 PROCESSED_DIR = os.path.join(BASE_DIR, processed_relative)
 UNZIPPED_DIR = os.path.join(PROCESSED_DIR, "unzipped")
@@ -68,6 +62,7 @@ if __name__ == "__main__":
                       veiculos_file_path_list]
     
     try:
+        os.makedirs(FORMATTED_DIR, exist_ok=True)
         for file_path_list in file_path_lists:
             df = pd.DataFrame()
             for file_path in file_path_list:
