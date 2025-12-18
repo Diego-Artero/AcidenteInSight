@@ -1,7 +1,7 @@
 import os
 import pandas as pd
 import yaml
-from utils import load_config
+from src.utils import load_config
 from pathlib import Path
 
 # Project root
@@ -14,6 +14,7 @@ config = load_config(CONFIG_PATH)
 # Directories
 
 CLEANED_DIR = os.path.join(BASE_DIR, config["scraping"]["save_path_processed_cleaned"])
+os.makedirs(CLEANED_DIR,exist_ok=True)
 FORMATTED_DIR = os.path.join(BASE_DIR, config["scraping"]["save_path_processed_formatted"])
 PESSOAS_PATH = os.path.join(FORMATTED_DIR, 'pessoas.csv')
 SINISTROS_PATH = os.path.join(FORMATTED_DIR, 'sinistros.csv')
@@ -23,45 +24,41 @@ PATHS = [PESSOAS_PATH,SINISTROS_PATH,VEICULOS_PATH]
 def data_cleaner(PATHS):
     for PATH in PATHS:
         try:
+            anos_remove= [2014, 2015, 2016, 2017, 2018]
+            date_colums_to_drop = []
             if PATH == PESSOAS_PATH:
                 df = pd.read_csv(PATH)
                 df.columns = df.columns.str.lower().str.strip().str.replace(' ', '_')
-                df = df[df['gravidade_lesao'] != 'NÃO DISPONIVEL']
+                df['data_sinistro'] = pd.to_datetime(df['data_sinistro'], errors='coerce',dayfirst=True)
+                
+                df = df[df['tipo_veiculo_vitima'] != 'NAO DISPONIVEL']
+                df = df[~df['ano_sinistro'].isin(anos_remove)]
 
             elif PATH == VEICULOS_PATH:
+
                 df = pd.read_csv(PATH)
                 df.columns = df.columns.str.lower().str.strip().str.replace(' ', '_')
                 df = df[df['tipo_veiculo'] != 'NAO DISPONIVEL']
-
+                df = df[~df['ano_sinistro'].isin(anos_remove)]
             else:
+
                 df = pd.read_csv(PATH)
                 df.columns = df.columns.str.lower().str.strip().str.replace(' ', '_')
 
-                cols_to_drop = [
-                    "id_sinistro",
-                    "tp_veiculo_nao_disponivel",
-                    "gravidade_nao_disponivel",
-                    "tp_sinistro_nao_disponivel",
-                    "logradouro",
-                    "numero_logradouro",
-                    "ano_mes_sinistro"
-                ]
-                
-                cols_to_drop = [col for col in cols_to_drop if col in df.columns]
-                anos_remover = [2014, 2015, 2016, 2017, 2018]
+                df['data_sinistro'] = pd.to_datetime(df['data_sinistro'], errors='coerce',dayfirst=True)
+                df['hora_sinistro'] = pd.to_datetime(df['hora_sinistro'], format='%H:%M', errors='coerce').dt.hour + \
+                                      pd.to_datetime(df['hora_sinistro'], format='%H:%M', errors='coerce').dt.minute / 60
+                df['hora_sinistro'] = df['hora_sinistro'].fillna(df['hora_sinistro'].median())
 
-                cols_to_drop_due_to_leakage = [
-                "gravidade_leve", "gravidade_grave", "gravidade_ileso", "gravidade_fatal",
-                ]
-
-                df = df.drop(columns=cols_to_drop)
-                df = df.drop(columns=cols_to_drop_due_to_leakage)
+                df = df[df['tipo_veiculo'] != 'NAO DISPONIVEL']
                 df = df[df['tipo_registro'] != "NOTIFICACAO"]
-                df = df[~df['ano_sinistro'].isin(anos_remover)]
+                df = df[~df['ano_sinistro'].isin(anos_remove)]
+
             output_file = os.path.join(CLEANED_DIR, os.path.basename(PATH))
             df.to_csv(output_file, index=False)
+
         except Exception as e:
-            print(f"Error at cleaning DataFrames: {e}")
+            print(f"Error at cleaning DataFrames{df.head()}: {e}")
             
 if __name__ == '__main__':
     data_cleaner(PATHS)
