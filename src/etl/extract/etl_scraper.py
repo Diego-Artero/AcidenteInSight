@@ -19,32 +19,36 @@ config = load_config(CONFIG_PATH)
 BASE_URL = config["scraping"]["base_url"]
 DOWNLOAD_DIR = os.path.join(BASE_DIR, config["scraping"]["save_path"])
 
-# Garantir que a pasta de download exista
-os.makedirs(DOWNLOAD_DIR, exist_ok=True)
 
-# Criando o perfil do Firefox para configurar o diretório de download
-profile = FirefoxProfile()
-profile.set_preference("browser.download.folderList", 2)
-profile.set_preference("browser.download.dir", DOWNLOAD_DIR)
+def build_firefox_options(download_dir: Path) -> Options:
+                         
+    os.makedirs(download_dir, exist_ok=True)
+    profile = FirefoxProfile()
+    profile.set_preference("browser.download.folderList", 2)
+    profile.set_preference("browser.download.dir", str(download_dir))
+    profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip")
+    profile.set_preference("browser.download.useDownloadDir", True)
+    profile.set_preference("browser.download.manager.showWhenStarting", False)
 
-# Adicionando múltiplos MIME types que podem ser usados para arquivos zip
-profile.set_preference("browser.helperApps.neverAsk.saveToDisk", "application/zip, application/octet-stream, application/x-zip-compressed")
-profile.set_preference("browser.download.useDownloadDir", True)
-profile.set_preference("browser.download.manager.showWhenStarting", False)
+    options = Options()
+    
+    options.profile = profile
+    return options
 
-# Configurar o Firefox
-options = Options()
-options.profile = profile
+# Scraping Function
+def download_latest_report(
+        base_url: str,
+        options: Options,
 
-# Função para download do relatório
-def download_latest_report():
+):
+
     # Iniciar o serviço do GeckoDriver com o GeckoDriverManager
     geckodriver_path = GeckoDriverManager().install()
     service = Service(geckodriver_path)
     driver = webdriver.Firefox(service=service, options=options)
 
     try:
-        driver.get(BASE_URL)
+        driver.get(base_url)
         wait = WebDriverWait(driver, 4)  # Espera dinâmica de até 4 segundos
 
         # Encontrar e clicar no botão "Dados Abertos"

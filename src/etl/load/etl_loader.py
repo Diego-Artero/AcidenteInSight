@@ -20,6 +20,7 @@ def process_and_load_data(pessoas_path, veiculos_path, sinistros_path, CONFIG_PA
         BASE_DIR = Path(__file__).resolve().parents[3]
         DB_DIR = os.path.abspath(os.path.join(BASE_DIR, config['database']['save_path_processed_databases']))
         DB_PATH = os.path.join(DB_DIR, "acidentes_infosiga.db")
+        os.makedirs(DB_DIR,exist_ok=True)
 
         
         df_pessoas = pd.read_csv(pessoas_path)

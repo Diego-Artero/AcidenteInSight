@@ -21,11 +21,10 @@ SINISTROS_PATH = os.path.join(FORMATTED_DIR, 'sinistros.csv')
 VEICULOS_PATH = os.path.join(FORMATTED_DIR, 'veiculos.csv')
 PATHS = [PESSOAS_PATH,SINISTROS_PATH,VEICULOS_PATH]
 
-def data_cleaner(PATHS):
-    for PATH in PATHS:
+def data_cleaner(paths):
+    for PATH in paths:
         try:
             anos_remove= [2014, 2015, 2016, 2017, 2018]
-            date_colums_to_drop = []
             if PATH == PESSOAS_PATH:
                 df = pd.read_csv(PATH)
                 df.columns = df.columns.str.lower().str.strip().str.replace(' ', '_')
@@ -50,7 +49,6 @@ def data_cleaner(PATHS):
                                       pd.to_datetime(df['hora_sinistro'], format='%H:%M', errors='coerce').dt.minute / 60
                 df['hora_sinistro'] = df['hora_sinistro'].fillna(df['hora_sinistro'].median())
 
-                df = df[df['tipo_veiculo'] != 'NAO DISPONIVEL']
                 df = df[df['tipo_registro'] != "NOTIFICACAO"]
                 df = df[~df['ano_sinistro'].isin(anos_remove)]
 

@@ -13,7 +13,6 @@ config = load_config(CONFIG_PATH)
 raw_relative = config["scraping"]["save_path"] 
 DOWNLOAD_DIR = os.path.join(BASE_DIR, raw_relative)
 
-''
 processed_relative = config["scraping"]["save_path_processed"] 
 PROCESSED_DIR = os.path.join(BASE_DIR, processed_relative)
 UNZIPPED_DIR = os.path.join(PROCESSED_DIR, "unzipped")
@@ -27,7 +26,7 @@ def extract_zip(zip_path, extract_dir):
         zip_ref.extractall(extract_dir)
     print(f"Arquivos extraídos para: {extract_dir}")
 
-def parse_report(file_path):
+def extract_df(file_path):
     
     #Lê o arquivo de relatório (CSV ou Excel) e retorna um DataFrame.
     
@@ -39,20 +38,24 @@ def parse_report(file_path):
         raise ValueError(f"Formato de arquivo não suportado: {file_path}")
     return df
 
-if __name__ == "__main__":
-    # O arquivo ZIP baixado deve estar na pasta raw
-    zip_file = os.path.join(DOWNLOAD_DIR, "dados_infosiga.zip")
+def parse_report(
+                 download_dir:Path,
+                 unzipped_dir:Path,
+                 formatted_dir:Path
+                 ):
+    
+    zip_file = os.path.join(download_dir, "dados_infosiga.zip")
     
     # Extrair o ZIP
-    extract_zip(zip_file, UNZIPPED_DIR)
+    extract_zip(zip_file, unzipped_dir)
     
     # Formatar corretamente os arquivos recém unzippados
-    pessoas_2015_file_path = os.path.join(UNZIPPED_DIR, "pessoas_2015-2021.csv")
-    pessoas_2022_file_path = os.path.join(UNZIPPED_DIR, "pessoas_2022-2025.csv")
-    sinistros_2015_file_path = os.path.join(UNZIPPED_DIR, "sinistros_2015-2021.csv")
-    sinistros_2022_file_path = os.path.join(UNZIPPED_DIR, "sinistros_2022-2025.csv")
-    veiculos_2015_file_path = os.path.join(UNZIPPED_DIR, "veiculos_2015-2021.csv")
-    veiculos_2022_file_path = os.path.join(UNZIPPED_DIR, "veiculos_2022-2025.csv")
+    pessoas_2015_file_path = os.path.join(unzipped_dir, "pessoas_2015-2021.csv")
+    pessoas_2022_file_path = os.path.join(unzipped_dir, "pessoas_2022-2025.csv")
+    sinistros_2015_file_path = os.path.join(unzipped_dir, "sinistros_2015-2021.csv")
+    sinistros_2022_file_path = os.path.join(unzipped_dir, "sinistros_2022-2025.csv")
+    veiculos_2015_file_path = os.path.join(unzipped_dir, "veiculos_2015-2021.csv")
+    veiculos_2022_file_path = os.path.join(unzipped_dir, "veiculos_2022-2025.csv")
     
     pessoas_file_path_list = [pessoas_2015_file_path, pessoas_2022_file_path]
     sinistros_file_path_list = [sinistros_2015_file_path, sinistros_2022_file_path]
@@ -62,26 +65,25 @@ if __name__ == "__main__":
                       veiculos_file_path_list]
     
     try:
-        os.makedirs(FORMATTED_DIR, exist_ok=True)
+        os.makedirs(formatted_dir, exist_ok=True)
         for file_path_list in file_path_lists:
             df = pd.DataFrame()
             for file_path in file_path_list:
-                dfaux = parse_report(file_path)
+                dfaux = extract_df(file_path)
                 print("Preview dos dados:")
                 print(dfaux.head())
                 df = pd.concat([df, dfaux], ignore_index=True)
             
             if file_path_list == pessoas_file_path_list:
-                output_file = os.path.join(FORMATTED_DIR, "pessoas.csv")
+                output_file = os.path.join(formatted_dir, "pessoas.csv")
             elif file_path_list == sinistros_file_path_list:
-                output_file = os.path.join(FORMATTED_DIR, "sinistros.csv")
+                output_file = os.path.join(formatted_dir, "sinistros.csv")
             elif file_path_list == veiculos_file_path_list:
-                output_file = os.path.join(FORMATTED_DIR, "veiculos.csv")
-            # Salvar o DataFrame processado
+                output_file = os.path.join(formatted_dir, "veiculos.csv")
+            
          
             df.to_csv(output_file, index=False)
-            
-
-            print(f"Relatório processado salvo em: {FORMATTED_DIR}")
+        
+            print(f"Relatório processado salvo em: {formatted_dir}")
     except Exception as e:
         print(f"Erro ao processar o arquivo: {e}")
