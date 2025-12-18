@@ -21,7 +21,7 @@ SINISTROS_PATH = os.path.join(FORMATTED_DIR, 'sinistros.csv')
 VEICULOS_PATH = os.path.join(FORMATTED_DIR, 'veiculos.csv')
 PATHS = [PESSOAS_PATH,SINISTROS_PATH,VEICULOS_PATH]
 
-def data_cleaner(paths):
+def data_cleaner(paths:list[Path]):
     for PATH in paths:
         try:
             anos_remove= [2014, 2015, 2016, 2017, 2018]

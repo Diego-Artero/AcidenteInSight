@@ -1,6 +1,6 @@
 from src.etl.extract import download_latest_report, build_firefox_options, parse_report
 from src.etl.transform import data_cleaner
-from src.etl.load import save_dataframes_to_sqlite, process_and_load_data
+from src.etl.load import process_and_load_data
 from src.utils import load_config
 from pathlib import Path
 import os
@@ -25,13 +25,22 @@ sinistros_path = os.path.join(formatted_dir, 'sinistros.csv')
 veiculos_path = os.path.join(formatted_dir, 'veiculos.csv')
 paths = [pessoas_path,sinistros_path,veiculos_path]
 
+#load paths
+cleaned_dir = os.path.join(processed_dir, "cleaned")
+cleaned_pessoas_path = os.path.join(cleaned_dir, 'pessoas.csv')
+cleaned_sinistros_path = os.path.join(cleaned_dir, 'pessoas.csv')
+cleaned_veiculos_path = os.path.join(cleaned_dir, 'pessoas.csv')
+
 #1.ETL
 #1.1 Extraction
 #1.1.1 Scraping
-#browser_options = build_firefox_options(download_dir=download_dir)
-#download_latest_report(base_url=base_url, options=browser_options)
+browser_options = build_firefox_options(download_dir=download_dir)
+download_latest_report(base_url=base_url, options=browser_options)
 #1.1.2 Parsing
-#parse_report(download_dir=download_dir, unzipped_dir=unzipped_dir, formatted_dir=formatted_dir)
+parse_report(download_dir=download_dir, unzipped_dir=unzipped_dir, formatted_dir=formatted_dir)
 
 #1.2 Transform
 data_cleaner(paths=paths)
+
+#1.3 Load
+process_and_load_data(pessoas_path=cleaned_pessoas_path, sinistros_path=cleaned_sinistros_path, veiculos_path=cleaned_veiculos_path)

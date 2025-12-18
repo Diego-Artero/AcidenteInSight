@@ -1,6 +1,7 @@
 data/
-  raw/
-  processed/
-  unzipped/
-  formatted/
- 
+data/raw/
+data/processed/
+data/unzipped/
+data/formatted/
+data/cleaned/
+data/databases/

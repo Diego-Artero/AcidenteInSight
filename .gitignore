@@ -7,12 +7,19 @@ __pycache__/
 *.so
 
 # Data
+
 data/raw/*
 data/processed/*
-data/interim/*
+data/unzipped/*
+data/formatted/*
+data/cleaned/*
+data/databases/*
+
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/interim/.gitkeep
+!data/cleaned/.gitkeep
+!data/databases/.gitkeep
 
 # Distribution / packaging
 .Python

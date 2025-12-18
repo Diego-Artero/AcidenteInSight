@@ -65,5 +65,3 @@ def download_latest_report(
     finally:
         driver.quit()
 
-if __name__ == "__main__":
-    download_latest_report()

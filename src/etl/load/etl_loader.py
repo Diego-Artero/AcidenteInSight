@@ -5,6 +5,9 @@ import yaml
 from src.utils import load_config
 from pathlib import Path
 
+base_dir = Path(__file__).resolve().parents[3]
+config_path = base_dir / "config" / "config.yaml"
+config = load_config(config_path)
 # Loader function
 def save_dataframes_to_sqlite(DB_PATH, df_dict, if_exists="replace"):
     
@@ -13,10 +16,12 @@ def save_dataframes_to_sqlite(DB_PATH, df_dict, if_exists="replace"):
             df.to_sql(table_name, conn, if_exists=if_exists, index=False)
 
 
-def process_and_load_data(pessoas_path, veiculos_path, sinistros_path, CONFIG_PATH):
+def process_and_load_data(pessoas_path:Path,
+                          veiculos_path:Path,
+                          sinistros_path:Path,
+                          ):
     try:
-        config = load_config(CONFIG_PATH)
-
+        
         BASE_DIR = Path(__file__).resolve().parents[3]
         DB_DIR = os.path.abspath(os.path.join(BASE_DIR, config['database']['save_path_processed_databases']))
         DB_PATH = os.path.join(DB_DIR, "acidentes_infosiga.db")
@@ -40,23 +45,3 @@ def process_and_load_data(pessoas_path, veiculos_path, sinistros_path, CONFIG_PA
         print("DataFrame salvo como SQL Database com exito")
     except Exception as E:
         print("Erro na hora de salvar : ", E)
-
-
-if __name__ == "__main__":
-    
-    BASE_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "..", ".."))
-    CONFIG_PATH = os.path.join(BASE_DIR, "config", "config.yaml")
-
-    config = load_config(CONFIG_PATH)
-
-    CLEANED_DIR = os.path.join(BASE_DIR, config["scraping"]["save_path_processed_cleaned"])
-    PESSOAS_PATH = os.path.join(CLEANED_DIR, 'pessoas.csv')
-    SINISTROS_PATH = os.path.join(CLEANED_DIR, 'sinistros.csv')
-    VEICULOS_PATH = os.path.join(CLEANED_DIR, 'veiculos.csv')
-    
-    process_and_load_data(
-        PESSOAS_PATH,
-        VEICULOS_PATH,
-        SINISTROS_PATH,
-        CONFIG_PATH
-    )
