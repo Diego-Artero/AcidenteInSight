@@ -1,5 +1,6 @@
 import sqlite3
 import pandas as pd
+import pygeohash as pgh
 
 def process_and_remove_critical_cols(dataframe: pd.DataFrame) -> pd.DataFrame:
 
@@ -15,10 +16,33 @@ def process_and_remove_critical_cols(dataframe: pd.DataFrame) -> pd.DataFrame:
     cols_to_drop_due_to_leakage = [
                 "gravidade_leve", "gravidade_grave", "gravidade_ileso", "gravidade_fatal",
                 ]
+    
     cols_to_drop = [col for col in unused_cols_to_drop if col in dataframe.columns] + [col for col in cols_to_drop_due_to_leakage if col in dataframe.columns]
 
     df = dataframe.drop(columns=cols_to_drop)
 
+   
+
+    df["geohash"] = df.apply(
+        lambda row: pgh.encode(row.latitude, row.longitude, precision=6),
+        axis=1
+    )
+
+    categorical_cols = [
+    "tipo_via",
+    "municipio",
+    "regiao_administrativa",
+    "administracao",
+    "conservacao",
+    "jurisdicao",
+    "tipo_acidente_primario",
+    "dia_semana",
+    "geohash"
+    ]
+    
+    df[categorical_cols] = df[categorical_cols].astype("category")
+    df = dataframe.drop(columns=["latitude","longitude"])
+    
     return df
 
 def process_and_save_feature_dataframe_as_sql(feature_db_path, dataframe: pd.DataFrame, if_exists = "replace"):
