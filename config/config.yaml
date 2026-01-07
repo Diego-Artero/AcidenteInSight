@@ -23,6 +23,7 @@ database:
   save_path_processed_databases: "data\\processed\\databases"
 
 # Configurações de Machine Learning
+
 ml:
   model_type: "RandomForestClassifier"  # Opções: LogisticRegression, RandomForestClassifier, XGBoost, etc.
   test_size: 0.2
@@ -33,8 +34,8 @@ ml:
     - "clima"
     - "tipo_acidente"
     - "idade_condutor"
-    - "veiculo"
-
+    - "veiculo" 
+  models_save_path: "data\\models\\"
 # Configuração de Logs
 logging:
   level: "INFO"  # Opções: DEBUG, INFO, WARNING, ERROR, CRITICAL

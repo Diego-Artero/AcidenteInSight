@@ -51,7 +51,22 @@ def data_cleaner(paths:list[Path]):
 
                 df = df[df['tipo_registro'] != "NOTIFICACAO"]
                 df = df[~df['ano_sinistro'].isin(anos_remove)]
+                
+                df['latitude'] = pd.to_numeric(
+                df['latitude'].str.replace(',', '.', regex=False),
+                errors='coerce'
+                )
 
+                df['longitude'] = pd.to_numeric(
+                df['longitude'].str.replace(',', '.', regex=False),
+                errors='coerce'
+                )
+
+                df = df.dropna(subset=['latitude', 'longitude'])
+                df = df[
+                df['latitude'].between(-90, 90) &
+                df['longitude'].between(-180, 180)
+                ]
             output_file = os.path.join(CLEANED_DIR, os.path.basename(PATH))
             df.to_csv(output_file, index=False)
 

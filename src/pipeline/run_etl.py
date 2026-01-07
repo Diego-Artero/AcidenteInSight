@@ -28,8 +28,8 @@ paths = [pessoas_path,sinistros_path,veiculos_path]
 #load paths
 cleaned_dir = os.path.join(processed_dir, "cleaned")
 cleaned_pessoas_path = os.path.join(cleaned_dir, 'pessoas.csv')
-cleaned_sinistros_path = os.path.join(cleaned_dir, 'pessoas.csv')
-cleaned_veiculos_path = os.path.join(cleaned_dir, 'pessoas.csv')
+cleaned_sinistros_path = os.path.join(cleaned_dir, 'sinistros.csv')
+cleaned_veiculos_path = os.path.join(cleaned_dir, 'veiculos.csv')
 
 #1.ETL
 #1.1 Extraction

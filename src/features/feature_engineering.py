@@ -21,28 +21,26 @@ def process_and_remove_critical_cols(dataframe: pd.DataFrame) -> pd.DataFrame:
 
     df = dataframe.drop(columns=cols_to_drop)
 
-   
-
     df["geohash"] = df.apply(
         lambda row: pgh.encode(row.latitude, row.longitude, precision=6),
         axis=1
     )
-
+    print(df.columns)
     categorical_cols = [
     "tipo_via",
     "municipio",
     "regiao_administrativa",
     "administracao",
     "conservacao",
-    "jurisdicao",
-    "tipo_acidente_primario",
-    "dia_semana",
+    "circunscricao",
+    "tp_sinistro_primario",
+    "dia_da_semana",
     "geohash"
     ]
     
     df[categorical_cols] = df[categorical_cols].astype("category")
     df = dataframe.drop(columns=["latitude","longitude"])
-    
+
     return df
 
 def process_and_save_feature_dataframe_as_sql(feature_db_path, dataframe: pd.DataFrame, if_exists = "replace"):

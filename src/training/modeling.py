@@ -17,6 +17,6 @@ base_dir = Path(__file__).resolve().parents[2]
 config_path = base_dir / "config" / "config.yaml"
 
 config = load_config(config_path)
-base_url = config["scraping"]["base_url"]
-db_path = os.path.join(base_dir, config["database"]["save_path_processed_databases"], "acidentes_infosiga.db")
+
 feature_db_path = os.path.join(base_dir, config["database"]["save_path_processed_databases"], "featured_acidentes_infosiga.db")
+
