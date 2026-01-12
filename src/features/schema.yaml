@@ -1,0 +1,23 @@
+categorical:
+  - tipo_via
+  - municipio
+  - regiao_administrativa
+  - administracao
+  - conservacao
+  - circunscricao
+  - turno
+  - tipo_local
+  - geohash
+
+boolean:
+  - tp_sinistro_atropelamento
+  - tp_sinistro_colisao_frontal
+  - tp_sinistro_colisao_traseira
+  - tp_sinistro_colisao_lateral
+  - tp_sinistro_colisao_transversal
+  - tp_sinistro_colisao_outros
+  - tp_sinistro_choque
+  - tp_sinistro_capotamento
+  - tp_sinistro_engavetamento
+  - tp_sinistro_tombamento
+  - tp_sinistro_outros

@@ -21,6 +21,7 @@ conn = sqlite3.connect(db_path)
 
 # using the stable database version: "data/databases/acidentes_infosiga.db"
 df = pd.read_sql("SELECT * FROM sinistros", conn)
+
 conn.close()
 
 process_and_save_feature_dataframe_as_sql(feature_db_path, df, if_exists = "replace")

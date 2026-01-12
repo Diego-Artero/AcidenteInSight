@@ -28,14 +28,8 @@ ml:
   model_type: "RandomForestClassifier"  # Opções: LogisticRegression, RandomForestClassifier, XGBoost, etc.
   test_size: 0.2
   random_state: 42
-  features:
-    - "horario"
-    - "dia_semana"
-    - "clima"
-    - "tipo_acidente"
-    - "idade_condutor"
-    - "veiculo" 
-  models_save_path: "data\\models\\"
+  features_path: "src\\features\\schema.yaml"
+  models_save_path: "data\\models\\lightgbm_model.joblib"
 # Configuração de Logs
 logging:
   level: "INFO"  # Opções: DEBUG, INFO, WARNING, ERROR, CRITICAL

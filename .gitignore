@@ -14,7 +14,7 @@ data/unzipped/*
 data/formatted/*
 data/cleaned/*
 data/databases/*
-
+data/models/*
 !data/raw/.gitkeep
 !data/processed/.gitkeep
 !data/interim/.gitkeep
