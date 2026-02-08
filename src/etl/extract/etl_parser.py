@@ -1,7 +1,7 @@
 import os
 import zipfile
 import pandas as pd
-import yaml
+import shutil
 from pathlib import Path
 from src.utils import load_config
 
@@ -49,7 +49,29 @@ def parse_report(
     # Extrair o ZIP
     extract_zip(zip_file, unzipped_dir)
     
+    dados_infosiga_path = os.path.join(unzipped_dir, "dados_infosiga")
+
     # Formatar corretamente os arquivos recém unzippados
+    pessoas_2015_file_path = os.path.join(dados_infosiga_path, "pessoas_2015-2021.csv")
+    pessoas_2022_file_path = os.path.join(dados_infosiga_path, "pessoas_2022-2025.csv")
+    sinistros_2015_file_path = os.path.join(dados_infosiga_path, "sinistros_2015-2021.csv")
+    sinistros_2022_file_path = os.path.join(dados_infosiga_path, "sinistros_2022-2025.csv")
+    veiculos_2015_file_path = os.path.join(dados_infosiga_path, "veiculos_2015-2021.csv")
+    veiculos_2022_file_path = os.path.join(dados_infosiga_path, "veiculos_2022-2025.csv")
+    
+    pessoas_file_path_list = [pessoas_2015_file_path, pessoas_2022_file_path]
+    sinistros_file_path_list = [sinistros_2015_file_path, sinistros_2022_file_path]
+    veiculos_file_path_list = [veiculos_2015_file_path, veiculos_2022_file_path]
+    file_path_lists = [pessoas_file_path_list, 
+                      sinistros_file_path_list,
+                      veiculos_file_path_list]
+    
+    for file_path_list in file_path_lists:
+        for file_path in file_path_list:
+            shutil.move(file_path, unzipped_dir)
+
+    shutil.rmtree(dados_infosiga_path)
+
     pessoas_2015_file_path = os.path.join(unzipped_dir, "pessoas_2015-2021.csv")
     pessoas_2022_file_path = os.path.join(unzipped_dir, "pessoas_2022-2025.csv")
     sinistros_2015_file_path = os.path.join(unzipped_dir, "sinistros_2015-2021.csv")
@@ -60,10 +82,10 @@ def parse_report(
     pessoas_file_path_list = [pessoas_2015_file_path, pessoas_2022_file_path]
     sinistros_file_path_list = [sinistros_2015_file_path, sinistros_2022_file_path]
     veiculos_file_path_list = [veiculos_2015_file_path, veiculos_2022_file_path]
+    
     file_path_lists = [pessoas_file_path_list, 
                       sinistros_file_path_list,
                       veiculos_file_path_list]
-    
     try:
         os.makedirs(formatted_dir, exist_ok=True)
         for file_path_list in file_path_lists:

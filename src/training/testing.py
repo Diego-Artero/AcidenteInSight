@@ -12,6 +12,7 @@ from sklearn.metrics import classification_report, confusion_matrix
 from pathlib import Path
 import lightgbm as lgb
 from src.utils import load_config
+from src.features import apply_feature_schema
 
 #configuration setup
 base_dir = Path(__file__).resolve().parents[2]
@@ -24,5 +25,5 @@ feature_db_path = os.path.join(base_dir, config["database"]["save_path_processed
 conn = sqlite3.connect(feature_db_path)
 df = pd.read_sql("SELECT * FROM sinistros", conn)
 conn.close()
-
-print(df['tipo_registro'].unique())
+df = apply_feature_schema(df)
+print(df.dtypes)

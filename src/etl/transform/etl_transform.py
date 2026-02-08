@@ -71,7 +71,7 @@ def data_cleaner(paths:list[Path]):
             df.to_csv(output_file, index=False)
 
         except Exception as e:
-            print(f"Error at cleaning DataFrames{df.head()}: {e}")
+            print(f"Error at cleaning DataFrames: {e}")
             
 if __name__ == '__main__':
     data_cleaner(PATHS)
