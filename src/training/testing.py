@@ -24,6 +24,5 @@ feature_db_path = os.path.join(base_dir, config["database"]["save_path_processed
                                
 conn = sqlite3.connect(feature_db_path)
 df = pd.read_sql("SELECT * FROM sinistros", conn)
+print(df.columns)
 conn.close()
-df = apply_feature_schema(df)
-print(df.dtypes)

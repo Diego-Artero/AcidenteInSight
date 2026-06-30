@@ -20,10 +20,9 @@ config_path = base_dir / "config" / "config.yaml"
 
 config = load_config(config_path)
 
-
-feature_db_path = os.path.join(base_dir, config["database"]["save_path_processed_databases"], "featured_acidentes_infosiga.db")
+featured_db_path = os.path.join(base_dir, config["database"]["save_path_processed_databases"], "featured_acidentes_infosiga.db")
                                
-conn = sqlite3.connect(feature_db_path)
+conn = sqlite3.connect(featured_db_path)
 df = pd.read_sql("SELECT * FROM sinistros", conn)
 conn.close()
 df = apply_feature_schema(df)
