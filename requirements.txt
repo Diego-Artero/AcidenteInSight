@@ -1,0 +1,26 @@
+# --- Manipulação e análise de dados ---
+pandas>=2.0.0
+numpy>=1.24.0
+PyYAML>=6.0
+ 
+# --- Web scraping ---
+selenium>=4.15.0
+webdriver-manager>=4.0.0
+ 
+# --- Geolocalização ---
+pygeohash>=1.2.0
+ 
+# --- Machine Learning ---
+scikit-learn>=1.3.0
+lightgbm>=4.0.0
+joblib>=1.3.0
+tensorflow-cpu>=2.17.0
+ 
+# --- Visualização de dados ---
+matplotlib>=3.7.0
+seaborn>=0.12.0
+ 
+# --- Notebooks ---
+jupyter>=1.0.0
+ipykernel>=6.25.0
+ 
